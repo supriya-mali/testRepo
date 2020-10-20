@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,8 +24,8 @@ from google.auth.transport.requests import Request
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
-# The ID and range of a sample spreadsheet.
-SAMPLE_SPREADSHEET_ID = '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms'
+# The ID and range of a sample spreadsheest.
+SAMPLE_SPREADSHEET_ID = '1x0sYO5NyFWprvaIFZMInBfo6J2FA1-lZiKsSGc1rqJA'
 SAMPLE_RANGE_NAME = 'Class Data!A2:E'
 
 def main():

@@ -4,6 +4,10 @@
 import serial
 import time
 import struct
+import threading
+import csv
+fields = ['Date','Time','Voltage','Current','Power']
+filename = "VoltageReadings.csv";
 
 class BTPOWER:
 
@@ -13,7 +17,7 @@ class BTPOWER:
 	readPowerBytes 		= 	[0XB2,0xC0,0xA8,0x01,0x01,0x00,0x1C]
 	readRegPowerBytes 	= 	[0XB3,0xC0,0xA8,0x01,0x01,0x00,0x1D]
 
-	def __init__(self, com="/dev/rfcomm0", timeout=10.0):
+	def __init__(self, com="/dev/ttyUSB0", timeout=10.0):
 		self.ser = serial.Serial(
 			port=com,
 			baudrate=9600,
@@ -97,21 +101,53 @@ class BTPOWER:
 	def close(self):
 		self.ser.close()
 
-		
+#fields date time voltage current power		
 if __name__ == "__main__":
 	try:
-		sensor = BTPOWER()
-		print("Checking readiness")
-		print(sensor.isReady())
-		print("Reading voltage")
-		print(sensor.readVoltage())
-		print("Reading current")
-		print(sensor.readCurrent())
-		print("Reading power")
-		print(sensor.readPower())
-		print("reading registered power")
-		print(sensor.readRegPower())
-		print("reading all")
-		print(sensor.readAll())
+            #get sensor 
+            sensor = BTPOWER()
+            #checking readiness
+            print("checking readiness")
+            print(sensor.isReady())
+
+            #open the file in write 
+            with open(filename, 'w') as csvfile:
+                #creting a csv writer object
+                csvwriter = csv.writer(csvfile)
+
+                #writing the fields
+                csvwriter.writerow(fields)
+                #start while from here
+                while true:
+                    today = datetime.today()
+                    now = datetime.now()
+                    d1 = today.strftime("%d/%m/%Y")
+                    current_time = now.strftime("%H: %M: %S")
+                    
+                    #get data in row
+                    rows = [d1,current_time, sensor.readVoltage, sensor.readCurrent, sensor.readPower]
+                    #writing the data rows
+                    csvwriter.writerows(rows)
+                    print("reading voltage", readVoltage())
+
+#		sensor = BTPOWER()
+#print("Checking readiness")
+#print(sensor.isReady())
+#print("Reading voltage")
+#print(sensor.readVoltage())
+#print("Reading current")
+#print(sensor.readCurrent())
+#print("Reading power")
+#print(sensor.readPower())
+#print("reading registered power")
+#print(sensor.readRegPower())
+#print("reading all")
+#print(sensor.readAll())
+ #               while true:
+  #                  thread.Timer(5.0, sensor.readVoltage).start()
+   #                 thread.Timer(5.0, sensor.readCurrent).start()
+    #                thread.Timer(5.0, sensor.readPower).start()
+
+
 	finally:
 		sensor.close()
