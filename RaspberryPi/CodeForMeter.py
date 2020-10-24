@@ -124,12 +124,13 @@ if __name__ == "__main__":
                     now = datetime.now()
                     d1 = today.strftime("%d/%m/%Y")
                     current_time = now.strftime("%H: %M: %S")
-                    
+
+                    #newRow = [[d1','],[current] ]
                     #get data in row
-                    rows = [[d1], [current_time], [sensor.readVoltage()], [sensor.readCurrent()], [sensor.readPower()]]
+                    rows = [d1, current_time, sensor.readVoltage(), sensor.readCurrent(), sensor.readPower()]
                     print("data from rows", rows)
                     #writing the data rows
-                    csvwriter.writerows(rows)
+                    csvwriter.writerow(rows)
                     print("reading voltage", sensor.readVoltage())
 
 #		sensor = BTPOWER()
