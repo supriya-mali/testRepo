@@ -6,6 +6,7 @@ import time
 import struct
 import threading
 import csv
+from datetime import datetime
 fields = ['Date','Time','Voltage','Current','Power']
 filename = "VoltageReadings.csv";
 
@@ -118,17 +119,18 @@ if __name__ == "__main__":
                 #writing the fields
                 csvwriter.writerow(fields)
                 #start while from here
-                while true:
+                while 1:
                     today = datetime.today()
                     now = datetime.now()
                     d1 = today.strftime("%d/%m/%Y")
                     current_time = now.strftime("%H: %M: %S")
                     
                     #get data in row
-                    rows = [d1,current_time, sensor.readVoltage, sensor.readCurrent, sensor.readPower]
+                    rows = [[d1], [current_time], [sensor.readVoltage()], [sensor.readCurrent()], [sensor.readPower()]]
+                    print("data from rows", rows)
                     #writing the data rows
                     csvwriter.writerows(rows)
-                    print("reading voltage", readVoltage())
+                    print("reading voltage", sensor.readVoltage())
 
 #		sensor = BTPOWER()
 #print("Checking readiness")
