@@ -120,7 +120,7 @@ if __name__ == "__main__":
             #open the file in write 
             past = datetime.now()
             filename = filename+today.strftime("%d_%m_%Y")+'.csv'
-            with open(filename,'a') as csvfile:            #open file in write mode for append use a
+            with open(filename,'a') as csvfile:            #To open file in write mode use 'w' and  for append use 'a'
                 print("filename",filename)
                 filename = 'VoltageReadings_'
                 fileDate = datetime.today()                     #file creation date
@@ -133,12 +133,23 @@ if __name__ == "__main__":
                     d1 = datetime.now()
                     current_time = now.strftime("%H: %M: %S")
                     #get data in row
-                    rows = [d1.strftime("%D"), current_time, sensor.readVoltage(), sensor.readCurrent(), sensor.readPower()]
+                    try:
+                        rows = [d1.strftime("%D"), current_time, sensor.readVoltage(), sensor.readCurrent(), sensor.readPower()]        #add exception handling for no data
+                    except serial.SerialTimeoutException:
+                        print("No Electricity")
+                        csvwriter.writerow("No Electricity", now.strftime("%H: %M: %S"))
+                        sensor.close()
+                        time.sleep(60)
+                        main()
+                        
                     #writing the data rows
                     csvwriter.writerow(rows)
                     if past.strftime("%D") < d1.strftime("%D"):
                         print("past.strf",strftime("%D"))
-                        break 
-                    
+                        break
+
+    #except serial.SerialTimeoutException:           #return from here
+     #   print("Printing")
+
     finally:
         sensor.close()
