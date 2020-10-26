@@ -6,9 +6,12 @@ import time
 import struct
 import threading
 import csv
-from datetime import datetime
+import os, stat
+import platform
+
+from datetime import datetime, timedelta
 fields = ['Date','Time','Voltage','Current','Power']
-filename = "VoltageReadings.csv";
+filename = "VoltageReadings_";
 
 class BTPOWER:
 
@@ -104,53 +107,38 @@ class BTPOWER:
 
 #fields date time voltage current power		
 if __name__ == "__main__":
-	try:
-            #get sensor 
-            sensor = BTPOWER()
-            #checking readiness
-            print("checking readiness")
-            print(sensor.isReady())
-
+    try:
+        #get sensor 
+        sensor = BTPOWER()
+        today = datetime.today()
+        now = datetime.now()
+        #checking readines
+        print("checking readiness")
+        print(sensor.isReady())
+        
+        while 1:            #this one is main loop
             #open the file in write 
-            with open(filename, 'w') as csvfile:
+            past = datetime.now()
+            filename = filename+today.strftime("%d_%m_%Y")+'.csv'
+            with open(filename,'a') as csvfile:            #open file in write mode for append use a
+                print("filename",filename)
+                filename = 'VoltageReadings_'
+                fileDate = datetime.today()                     #file creation date
                 #creting a csv writer object
                 csvwriter = csv.writer(csvfile)
-
                 #writing the fields
                 csvwriter.writerow(fields)
                 #start while from here
-                while 1:
-                    today = datetime.today()
-                    now = datetime.now()
-                    d1 = today.strftime("%d/%m/%Y")
+                while 1:                                    #day loop
+                    d1 = datetime.now()
                     current_time = now.strftime("%H: %M: %S")
-
-                    #newRow = [[d1','],[current] ]
                     #get data in row
-                    rows = [d1, current_time, sensor.readVoltage(), sensor.readCurrent(), sensor.readPower()]
-                    print("data from rows", rows)
+                    rows = [d1.strftime("%D"), current_time, sensor.readVoltage(), sensor.readCurrent(), sensor.readPower()]
                     #writing the data rows
                     csvwriter.writerow(rows)
-                    print("reading voltage", sensor.readVoltage())
-
-#		sensor = BTPOWER()
-#print("Checking readiness")
-#print(sensor.isReady())
-#print("Reading voltage")
-#print(sensor.readVoltage())
-#print("Reading current")
-#print(sensor.readCurrent())
-#print("Reading power")
-#print(sensor.readPower())
-#print("reading registered power")
-#print(sensor.readRegPower())
-#print("reading all")
-#print(sensor.readAll())
- #               while true:
-  #                  thread.Timer(5.0, sensor.readVoltage).start()
-   #                 thread.Timer(5.0, sensor.readCurrent).start()
-    #                thread.Timer(5.0, sensor.readPower).start()
-
-
-	finally:
-		sensor.close()
+                    if past.strftime("%D") < d1.strftime("%D"):
+                        print("past.strf",strftime("%D"))
+                        break 
+                    
+    finally:
+        sensor.close()
