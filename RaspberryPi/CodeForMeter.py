@@ -8,7 +8,7 @@ import threading
 import csv
 import os, stat
 import platform
-
+from goto import goto, label
 from datetime import datetime, timedelta
 fields = ['Date','Time','Voltage','Current','Power']
 filename = "VoltageReadings_";
@@ -106,7 +106,8 @@ class BTPOWER:
 		self.ser.close()
 
 #fields date time voltage current power		
-if __name__ == "__main__":
+def main_code_for_meter():
+    label .start
     try:
         #get sensor 
         sensor = BTPOWER()
@@ -148,8 +149,10 @@ if __name__ == "__main__":
                         print("past.strf",strftime("%D"))
                         break
 
-    #except serial.SerialTimeoutException:           #return from here
+    except serial.SerialTimeoutException:           #return from here
+	go to .start
      #   print("Printing")
 
     finally:
         sensor.close()
+if __name__ == "__main__":
