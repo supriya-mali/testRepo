@@ -8,7 +8,7 @@ import threading
 import csv
 import os, stat
 import platform
-
+from goto import goto, label
 from datetime import datetime, timedelta
 fields = ['Date','Time','Voltage','Current','Power']
 filename = "VoltageReadings_";
